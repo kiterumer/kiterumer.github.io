@@ -79,17 +79,19 @@
 
 
 
-<meta name="description" content="我的博客开通啦！">
+<meta name="description" content="dataVue 实例的数据对象。Vue 将会递归将 data 的属性转换为 getter/setter，从而让 data 的属性能够响应数据变化。对象必须是纯粹的对象 (含有零个或多个的 key/value 对)。 实例创建之后，可以通过vm.$data访问原始数据对象。Vue实例也代理了对象上所有的属性，因此访问vm.a等价于vm.$data.a。 当一个组件被定义，data 必须声明为返回一">
 <meta property="og:type" content="article">
-<meta property="og:title" content="开博大吉">
-<meta property="og:url" content="http://yoursite.com/2019/03/21/开博大吉/index.html">
+<meta property="og:title" content="Vue">
+<meta property="og:url" content="http://yoursite.com/2019/05/09/Vue/index.html">
 <meta property="og:site_name" content="Kiterumer">
-<meta property="og:description" content="我的博客开通啦！">
+<meta property="og:description" content="dataVue 实例的数据对象。Vue 将会递归将 data 的属性转换为 getter/setter，从而让 data 的属性能够响应数据变化。对象必须是纯粹的对象 (含有零个或多个的 key/value 对)。 实例创建之后，可以通过vm.$data访问原始数据对象。Vue实例也代理了对象上所有的属性，因此访问vm.a等价于vm.$data.a。 当一个组件被定义，data 必须声明为返回一">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-03-21T12:21:48.963Z">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/16778935-5f5324992cbadde4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-05-09T09:01:47.407Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="开博大吉">
-<meta name="twitter:description" content="我的博客开通啦！">
+<meta name="twitter:title" content="Vue">
+<meta name="twitter:description" content="dataVue 实例的数据对象。Vue 将会递归将 data 的属性转换为 getter/setter，从而让 data 的属性能够响应数据变化。对象必须是纯粹的对象 (含有零个或多个的 key/value 对)。 实例创建之后，可以通过vm.$data访问原始数据对象。Vue实例也代理了对象上所有的属性，因此访问vm.a等价于vm.$data.a。 当一个组件被定义，data 必须声明为返回一">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/16778935-5f5324992cbadde4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -119,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/03/21/开博大吉/">
+  <link rel="canonical" href="http://yoursite.com/2019/05/09/Vue/">
 
 
 
 
 
-  <title>开博大吉 | Kiterumer</title>
+  <title>Vue | Kiterumer</title>
   
 
 
@@ -232,7 +234,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/21/开博大吉/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/09/Vue/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kiterumer">
@@ -249,7 +251,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">开博大吉</h1>
+          <h1 class="post-title" itemprop="name headline">Vue</h1>
         
 
         <div class="post-meta">
@@ -261,8 +263,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-21T14:24:25+08:00">
-                2019-03-21
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-09T17:00:51+08:00">
+                2019-05-09
               </time>
             
 
@@ -279,7 +281,7 @@
 
           
           
-             <span id="/2019/03/21/开博大吉/" class="leancloud_visitors" data-flag-title="开博大吉">
+             <span id="/2019/05/09/Vue/" class="leancloud_visitors" data-flag-title="Vue">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -310,7 +312,33 @@
       
 
       
-        <h1 id="我的博客开通啦！"><a href="#我的博客开通啦！" class="headerlink" title="我的博客开通啦！"></a>我的博客开通啦！</h1>
+        <p><img src="https://upload-images.jianshu.io/upload_images/16778935-5f5324992cbadde4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<h2 id="data"><a href="#data" class="headerlink" title="data"></a>data</h2><p>Vue 实例的数据对象。Vue 将会递归将 data 的属性转换为 getter/setter，从而让 data 的属性能够响应数据变化。对象必须是纯粹的对象 (含有零个或多个的 key/value 对)。</p>
+<p>实例创建之后，可以通过<code>vm.$data</code>访问原始数据对象。Vue实例也代理了对象上所有的属性，因此访问<code>vm.a</code>等价于<code>vm.$data.a</code>。</p>
+<p>当一个组件被定义，data 必须声明为返回一个初始数据对象的函数，因为组件可能被用来创建多个实例。如果 data 仍然是一个纯粹的对象，则所有的实例将共享引用同一个数据对象！通过提供 data 函数，每次创建一个新实例后，我们能够调用 data 函数，从而返回初始数据的一个全新副本数据对象。<br>可以想象原型。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// Vue.extend() 中 data 必须是函数</span><br><span class="line">var Component = Vue.extend(&#123;</span><br><span class="line">  data: function () &#123;</span><br><span class="line">    return &#123; a: 1 &#125;</span><br><span class="line">  &#125;</span><br><span class="line">/*</span><br><span class="line">等价于 data()&#123;</span><br><span class="line">  return &#123; a: 1 &#125;</span><br><span class="line">&#125;</span><br><span class="line">*/</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>注意，如果你为 data 属性使用了箭头函数，则 this 不会指向这个组件的实例，不过你仍然可以将其实例作为函数的第一个参数来访问。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data: vm =&gt; (&#123; a: vm.myProp &#125;)  //可以访问vm的属性</span><br><span class="line">data: () =&gt; &#123; this.a &#125;  //this并不指向vm</span><br></pre></td></tr></table></figure></p>
+<h2 id="props"><a href="#props" class="headerlink" title="props"></a>props</h2><p>使用props传递数据作用域是孤立的，它是父组件通过模板传递而来，想接收到父组件传来的数据，需要通过props选项来进行接收。<br>子组件需要显示的声明接收父组件传递来的数据的数量，类型，初始值。<br>简单的接收可以通过数组的形式来进行接收。<br>父组件通过在子组件模板中用<code>v-bind</code>即<code>:</code>来传递子组件中需要接收的数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">父组件</span><br><span class="line">&lt;template&gt;</span><br><span class="line">   &lt;div&gt;</span><br><span class="line">      &lt;demo :msg=&apos;msgData&apos; :math = &apos;mathData&apos; &gt;&lt;/demo&gt;</span><br><span class="line">   &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line"> export default &#123;</span><br><span class="line">     data () &#123;</span><br><span class="line">       return  &#123;</span><br><span class="line">          msgData:&apos;从父组件接收来的数据&apos;,</span><br><span class="line">          mathData : 2</span><br><span class="line">       &#125;</span><br><span class="line">     &#125;,</span><br><span class="line">     components : &#123;</span><br><span class="line">       Demo</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">子组件</span><br><span class="line">export default &#123;</span><br><span class="line">  name: &apos;demo&apos;,</span><br><span class="line">  props: [ &apos;msg&apos; , &apos;math&apos;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>语法：<code>:msg = msgData</code></p>
+<ul>
+<li><strong>msg必须要与子组件的props同名</strong></li>
+<li><strong>msgData则是父组件中想子组件传递的数据，一个变量,中转作用</strong></li>
+</ul>
+<p>在 data 选项中，当前实例（当前组件中改动）可以任意改变data选项里的数据，Vue传递数据时是基于<strong>数据单向流动</strong>，子组件不能改变当前实例中的 props 任何属性，需要通知父组件改变相应的值，重新改变。<br>类似水会从高向地处流，要想改变下游的水，需要从源头改变。</p>
+<h2 id="on-emit-v-on"><a href="#on-emit-v-on" class="headerlink" title="on,emit,v-on"></a>on,emit,v-on</h2><p>每个 Vue 实例都实现了事件接口：</p>
+<ul>
+<li>使用<code>$on(eventName)</code>监听事件  <code>vm.$emit( event, […args] )</code></li>
+<li>使用<code>$emit(eventName)</code>触发事件 <code>vm.$on( event, callback )</code><br><code>$emit</code>的(eventName)和<code>$on</code>的(eventName)是一一对应的。</li>
+</ul>
+<p><code>$emit</code>和 <code>$on</code> 必须都在实例上进行触发和监听。</p>
+<p><strong>父组件可以在使用子组件的引入模板直接用 <code>v-on</code> 来监听子组件(<code>$emit</code>)触发的事件。</strong></p>
+<h2 id="v-model（语法糖）"><a href="#v-model（语法糖）" class="headerlink" title="v-model（语法糖）"></a>v-model（语法糖）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;input v-model=&quot;something&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>不过是以下示例的语法糖：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;input</span><br><span class="line">  v-bind:value=&quot;something&quot;</span><br><span class="line">  v-on:input=&quot;something = $event.target.value&quot;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>既然在元素上能进行双向绑定，那在组件中进行双向绑定又如何实现，原理其实都是一样的，只是应用在自定义的组件上时，拿的并不是$event.target.value，因为我此时不作用在 Input 输入框上。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;custom-input</span><br><span class="line">  v-bind:value=&quot;something&quot;</span><br><span class="line">  v-on:input=&quot;something = arguments[0]&quot;&gt;</span><br><span class="line">&lt;/custom-input&gt;</span><br></pre></td></tr></table></figure></p>
+<p>通过以上简写，通过自定事件让 v-model 进行一个父子组件双向绑定的话。<br><strong>v-bind:value=’something’ 此时 value 是作为子组件接收的 props</strong>。<br>接收的只能是 value 吗？必须是，因为 <strong>v-model 是基于 Input 输入框定制的，其中value 值是为 Input 内部定制的</strong><br>此时作用在组件上时，v-on 监听的语法糖也会有所改动，监听的并不是$event.target.value，而是<strong>回调函数中的第一个参数</strong>。</p>
+<h3 id="checkbox-和-radio-原理"><a href="#checkbox-和-radio-原理" class="headerlink" title="checkbox 和 radio 原理"></a>checkbox 和 radio 原理</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;input type=&quot;checkbox&quot; :checked=&quot;status&quot; @change=&quot;status = $event.target.checked&quot; /&gt;</span><br><span class="line"></span><br><span class="line"> &lt;input type=&quot;radio&quot; :checked=&quot;status&quot; @change=&quot;status = $event.target.checked&quot; /&gt;</span><br></pre></td></tr></table></figure>
+<p>通过绑定 checked 属性，同样的监听的是 change 事件，无论是 checkbox 还是 radio 在操作的时候都会隐式自动触发一个 change 事件，跟 Input 通过 value 值，Input 触发事件原理绑定是一样的。</p>
+
       
     </div>
     
@@ -334,8 +362,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/03/21/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2019/05/06/HTTP缓存/" rel="next" title="HTTP缓存">
+                <i class="fa fa-chevron-left"></i> HTTP缓存
               </a>
             
           </div>
@@ -343,10 +371,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/03/21/我的第二篇博客/" rel="prev" title="命令行一瞥">
-                命令行一瞥 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -460,7 +484,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#我的博客开通啦！"><span class="nav-number">1.</span> <span class="nav-text">我的博客开通啦！</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#data"><span class="nav-number">1.</span> <span class="nav-text">data</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#props"><span class="nav-number">2.</span> <span class="nav-text">props</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#on-emit-v-on"><span class="nav-number">3.</span> <span class="nav-text">on,emit,v-on</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#v-model（语法糖）"><span class="nav-number">4.</span> <span class="nav-text">v-model（语法糖）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#checkbox-和-radio-原理"><span class="nav-number">4.1.</span> <span class="nav-text">checkbox 和 radio 原理</span></a></li></ol></li></ol></div>
             
 
           </div>
