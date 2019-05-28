@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="当我们修改数据（普通的JS对象）时，视图会在悄悄地进行更新，这便是响应式，让状态管理变得很简单直接。 Object​.define​Property() The Object.defineProperty() method defines a new property directly on an object, or modifies an exisiting property on an o">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue的响应式原理">
+<meta property="og:url" content="http://yoursite.com/2019/05/29/Vue的响应式原理/index.html">
+<meta property="og:site_name" content="Kiterumer">
+<meta property="og:description" content="当我们修改数据（普通的JS对象）时，视图会在悄悄地进行更新，这便是响应式，让状态管理变得很简单直接。 Object​.define​Property() The Object.defineProperty() method defines a new property directly on an object, or modifies an exisiting property on an o">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/16778935-c261f19859fb9c40.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/16778935-21962fbfa56c8958.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/16778935-6f612e54cebf0e8a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-05-28T18:23:15.859Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue的响应式原理">
+<meta name="twitter:description" content="当我们修改数据（普通的JS对象）时，视图会在悄悄地进行更新，这便是响应式，让状态管理变得很简单直接。 Object​.define​Property() The Object.defineProperty() method defines a new property directly on an object, or modifies an exisiting property on an o">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/16778935-c261f19859fb9c40.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/29/Vue的响应式原理/">
+
+
+
+
+
+  <title>Vue的响应式原理 | Kiterumer</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kiterumer</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/29/Vue的响应式原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kiterumer">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kiterumer">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vue的响应式原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-29T02:22:39+08:00">
+                2019-05-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/05/29/Vue的响应式原理/" class="leancloud_visitors" data-flag-title="Vue的响应式原理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://upload-images.jianshu.io/upload_images/16778935-c261f19859fb9c40.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>当我们修改数据（普通的JS对象）时，视图会在悄悄地进行更新，这便是响应式，让状态管理变得很简单直接。</p>
+<h2 id="Object​-define​Property"><a href="#Object​-define​Property" class="headerlink" title="Object​.define​Property()"></a>Object​.define​Property()</h2><blockquote>
+<p>The Object.defineProperty() method defines a new property directly on an object, or modifies an exisiting property on an object, and returns the object.</p>
+</blockquote>
+<p>Object.defineProperty() 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性， 并返回这个对象。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><p>Object.defineProperty(object, propertyname, descriptor)</p>
+<h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><ul>
+<li>object 必需。 要在其上添加或修改属性的对象。 这可能是一个本机 JavaScript对象（即用户定义的对象或内置对象）或 DOM 对象。</li>
+<li>propertyname 必需。 一个包含属性名称的字符串。</li>
+<li>descriptor 必需。 属性描述符。 它可以针对数据属性或访问器属性。</li>
+</ul>
+<h3 id="属性描述符（descriptor）"><a href="#属性描述符（descriptor）" class="headerlink" title="属性描述符（descriptor）"></a>属性描述符（descriptor）</h3><p>描述符必须是数据描述符和存取描述符这两种形式之一，不能同时是两者。</p>
+<ul>
+<li>数据描述符：一个具有值的属性，该值可能是可写的，也可能不是可写的。</li>
+<li>存取描述符是由getter-setter函数对描述的属性。</li>
+</ul>
+<p>描述符可同时具有的键值<br><img src="https://upload-images.jianshu.io/upload_images/16778935-21962fbfa56c8958.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>描述符值得默认值</p>
+<ul>
+<li>拥有布尔值的字段的默认值都是false。</li>
+<li>value，get和set字段的默认值为undefined。</li>
+</ul>
+<h3 id="实际使用"><a href="#实际使用" class="headerlink" title="实际使用"></a>实际使用</h3><p><strong>优化对象获取和修改属性方式</strong><br>比如，过去我们改变一个dom节点的transfrom属性是这样的。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//假设我们要设置其位移</span></span><br><span class="line"><span class="keyword">var</span> targetDom = <span class="built_in">document</span>.getElementById(<span class="string">'target'</span>);</span><br><span class="line"><span class="keyword">var</span> transformText = <span class="string">'translateX('</span> + <span class="number">10</span> + <span class="string">'px)'</span>;</span><br><span class="line">targetDom.style.webkitTransform = transformText;</span><br><span class="line">targetDom.style.transform = transformText;</span><br></pre></td></tr></table></figure></p>
+<p>如果页面这样的需求很多，编写量无疑是巨大且繁琐的。<br>但如果用Object.defineProperty()，则可以这样<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.defineProperty(dom, <span class="string">'translateX'</span>, &#123;</span><br><span class="line"><span class="keyword">set</span>: function(value) &#123;</span><br><span class="line">         <span class="keyword">var</span> transformText = <span class="string">'translateX('</span> + value + <span class="string">'px)'</span>;</span><br><span class="line">        dom.style.webkitTransform = transformText;</span><br><span class="line">        dom.style.transform = transformText;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//这样再后面调用的时候, 十分简单</span></span><br><span class="line">dom.translateX = <span class="number">10</span>;</span><br><span class="line">dom.translateX = <span class="number">-10</span>;</span><br><span class="line"><span class="comment">//甚至可以拓展设置如scale, originX, translateZ,等各个属性，达到下面的效果</span></span><br><span class="line">dom.scale = <span class="number">1.5</span>;  <span class="comment">//放大1.5倍</span></span><br><span class="line">dom.originX = <span class="number">5</span>;  <span class="comment">//设置中心点X</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其实相当于做了一个封装。</p>
+<h2 id="Vue如何追踪变化"><a href="#Vue如何追踪变化" class="headerlink" title="Vue如何追踪变化"></a>Vue如何追踪变化</h2><p>当把一个普通的 JavaScript 对象传入 Vue 实例作为 <code>data</code> 选项，Vue 将遍历此对象所有的属性，并使用 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty" target="_blank" rel="noopener"><code>Object.defineProperty</code></a> 把这些属性全部转为 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Working_with_Objects#%E5%AE%9A%E4%B9%89_getters_%E4%B8%8E_setters" target="_blank" rel="noopener">getter/setter</a>。<br>这些 getter/setter 对用户来说是不可见的，但是在内部它们让 Vue 能够追踪依赖，在属性被访问和修改时通知变更。<br>每个组件实例都对应一个 <strong>watcher</strong> 实例，它会在组件渲染的过程中把“接触”过的数据属性记录为依赖。之后当依赖项的 setter 触发时，会通知 watcher，从而使它关联的组件重新渲染。<br><img src="https://upload-images.jianshu.io/upload_images/16778935-6f612e54cebf0e8a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>受现代 JavaScript 的限制 (而且 Object.observe 也已经被废弃)，Vue 无法检测到对象属性的添加或删除。由于 Vue 会在初始化实例时对属性执行 getter/setter 转化，所以属性必须在 data 对象上（一般用data函数返回形式表示）存在才能让 Vue 将它转换为响应式的。</p>
+<p>对于已经创建的实例，Vue 不允许动态添加根级别的响应式属性。但是，可以使用 <code>Vue.set(object, propertyName, value)</code>方法向嵌套对象添加响应式属性。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Vue.set(vm.someObject, &apos;b&apos;, 2)</span><br></pre></td></tr></table></figure></p>
+<p>还可以使用 <code>vm.$set</code>实例方法，这也是全局 Vue.set 方法的别名：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">this.$set(this.someObject,&apos;b&apos;,2)</span><br></pre></td></tr></table></figure></p>
+<p>有时你可能需要为已有对象赋值多个新属性，比如使用 Object.assign() 或 _.extend()。但是，这样添加到对象上的新属性不会触发更新。在这种情况下，你应该用原对象与要混合进去的对象的属性一起创建一个新的对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 代替 `Object.assign(this.someObject, &#123; a: 1, b: 2 &#125;)`</span><br><span class="line">this.someObject = Object.assign(&#123;&#125;, this.someObject, &#123; a: 1, b: 2 &#125;)</span><br></pre></td></tr></table></figure></p>
+<p>以一个空对象为基础，将原对象和混合进去的对象一起加进去生成一个新对象。</p>
+<h3 id="声明响应式属性"><a href="#声明响应式属性" class="headerlink" title="声明响应式属性"></a>声明响应式属性</h3><p>由于 Vue 不允许动态添加根级响应式属性，所以你必须在初始化实例前声明所有根级响应式属性，哪怕只是一个空值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">data () &#123;</span><br><span class="line">     return &#123;</span><br><span class="line">       username:&apos;&apos;,</span><br><span class="line">       password:&apos;&apos;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>提前声明所有的响应式属性，可以让组件代码在未来修改或给其他开发人员阅读时更易于理解。</p>
+<h3 id="异步更新队列"><a href="#异步更新队列" class="headerlink" title="异步更新队列"></a>异步更新队列</h3><p>Vue 在更新 DOM 时是异步执行的。只要侦听到数据变化，Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据变更。<br>如果同一个 watcher 被多次触发，只会被推入到队列中一次。这种在缓冲时去除重复数据对于避免不必要的计算和 DOM 操作是非常重要的。然后，在下一个的事件循环“tick”中，Vue 刷新队列并执行实际 (已去重的) 工作。<br>Vue 在内部对异步队列尝试使用原生的 Promise.then、MutationObserver 和 setImmediate，如果执行环境不支持，则会采用 setTimeout(fn, 0) 代替。<br>例如，当你设置 vm.someData = ‘new value’，该组件不会立即重新渲染。当刷新队列时，组件会在下一个事件循环“tick”中更新。<br>如果你想基于更新后的 DOM 状态来做点什么，可以使用<code>Vue.nextTick(callback)</code>。这样，回调函数将在DOM更新完成后被调用。例如：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"example"</span>&gt;</span>&#123;&#123;message&#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> vm = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#example'</span>,</span><br><span class="line">  data: &#123;</span><br><span class="line">    message: <span class="string">'123'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">vm.message = <span class="string">'new message'</span> <span class="comment">// 更改数据</span></span><br><span class="line">vm.$el.textContent === <span class="string">'new message'</span> <span class="comment">// false</span></span><br><span class="line">Vue.nextTick(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  vm.$el.textContent === <span class="string">'new message'</span> <span class="comment">// true</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>在组件内使用 <code>vm.$nextTick()</code>实例方法特别方便，因为它不需要全局 Vue，并且回调函数中的 this 将自动绑定到当前的 Vue 实例上。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(&apos;example&apos;, &#123;</span><br><span class="line">  template: &apos;&lt;span&gt;&#123;&#123; message &#125;&#125;&lt;/span&gt;&apos;,</span><br><span class="line">  data: function () &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      message: &apos;未更新&apos;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    updateMessage: function () &#123;</span><br><span class="line">      this.message = &apos;已更新&apos;</span><br><span class="line">      console.log(this.$el.textContent) // =&gt; &apos;未更新&apos;</span><br><span class="line">      this.$nextTick(function () &#123;</span><br><span class="line">        console.log(this.$el.textContent) // =&gt; &apos;已更新&apos;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>$nextTick()返回一个Promise对象，因此可以使用async/await语法完成相同的事情。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">methods: &#123;</span><br><span class="line">  updateMessage: <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.message = <span class="string">'已更新'</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.$el.textContent) <span class="comment">// =&gt; '未更新'</span></span><br><span class="line">    <span class="keyword">await</span> <span class="keyword">this</span>.$nextTick()</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.$el.textContent) <span class="comment">// =&gt; '已更新'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/21/Shadowsocks/" rel="next" title="Shadowsocks">
+                <i class="fa fa-chevron-left"></i> Shadowsocks
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Kiterumer</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Object​-define​Property"><span class="nav-number">1.</span> <span class="nav-text">Object​.define​Property()</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#语法"><span class="nav-number">1.1.</span> <span class="nav-text">语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参数"><span class="nav-number">1.2.</span> <span class="nav-text">参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#属性描述符（descriptor）"><span class="nav-number">1.3.</span> <span class="nav-text">属性描述符（descriptor）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实际使用"><span class="nav-number">1.4.</span> <span class="nav-text">实际使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue如何追踪变化"><span class="nav-number">2.</span> <span class="nav-text">Vue如何追踪变化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#声明响应式属性"><span class="nav-number">2.1.</span> <span class="nav-text">声明响应式属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#异步更新队列"><span class="nav-number">2.2.</span> <span class="nav-text">异步更新队列</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kiterumer</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<!-- <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+-->
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("", "");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
